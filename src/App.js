@@ -15,40 +15,41 @@ function App() {
   const heroes = ['Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut', 'Anti-Mage', 'Lion', 'Tinker'];
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    // Если заявка уже отправлена, не выполняем повторный запрос
-    if (isSubmitted) {
-      return;
-    }
+  // Если заявка уже отправлена, не выполняем повторный запрос
+  if (isSubmitted) {
+    return;
+  }
 
-    setLoading(true);
-    setIsSubmitted(true); // Блокируем повторную отправку заявки
+  setLoading(true);
+  setIsSubmitted(true); // Блокируем повторную отправку заявки
 
-    const order = { hero, skin, pose, comment, contact };
+  const order = { hero, skin, pose, comment, contact };
 
-    try {
-      const response = await fetch('/api/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(order),
-      });
+  try {
+    const response = await fetch('/api/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(order),
+    });
 
-      const result = await response.json();
-      if (response.ok) {
-        setResponseMessage('Заявка успешно отправлена');
-      } else {
-        setResponseMessage('Ошибка при отправке заявки');
-      }
-    } catch (error) {
+    const result = await response.json();
+    if (response.ok) {
+      setResponseMessage('Заявка успешно отправлена');
+    } else {
       setResponseMessage('Ошибка при отправке заявки');
-      console.error('Ошибка:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    setResponseMessage('Ошибка при отправке заявки');
+    console.error('Ошибка:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleClose = () => {
     setShowForm(false); // Скрыть форму
