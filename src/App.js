@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 
 const allHeroes = ['Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut', 'Anti-Mage', 'Tinker', 'Lina', 'Crystal Maiden'];  // Пример расширенного списка героев
