@@ -1,86 +1,57 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 
-const allHeroes = ['Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut', 'Anti-Mage', 'Tinker', 'Lina', 'Crystal Maiden'];  // Пример расширенного списка героев
+import { useState } from 'react';
+
+const heroes = ['Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut'];
 
 export default function App() {
-  const [tg, setTg] = useState(null);
   const [hero, setHero] = useState('');
   const [skin, setSkin] = useState('');
   const [pose, setPose] = useState('');
   const [comment, setComment] = useState('');
   const [contact, setContact] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredHeroes, setFilteredHeroes] = useState(allHeroes);
-
-  useEffect(() => {
-    const tgWindow = window?.Telegram?.WebApp;
-    if (tgWindow) {
-      tgWindow.ready();
-      setTg(tgWindow);
-    }
-  }, []);
-
-  // Функция для фильтрации героев на основе текста поиска
-  useEffect(() => {
-    setFilteredHeroes(
-      allHeroes.filter((hero) => hero.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  }, [searchQuery]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const sendOrder = async () => {
-  const order = { hero, skin, pose, comment, contact };
+    const order = { hero, skin, pose, comment, contact };
 
-  // Отправляем запрос на сервер для обработки
-  const response = await fetch('https://telegram-mini-app-bjen.vercel.app/api/order', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(order),
-  });
+    try {
+      const response = await fetch('https://telegram-mini-app-bjen.vercel.app/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(order),
+      });
 
-  if (response.ok) {
-    // Отправка успешна, можем уведомить пользователя
-    alert('Заявка отправлена!');
-  } else {
-    alert('Произошла ошибка при отправке заявки.');
-  }
+      const data = await response.json();
 
-  // Отправляем данные в Telegram WebApp
-  if (tg) tg.sendData(JSON.stringify(order));
-};
+      if (!response.ok) {
+        throw new Error(data.message || 'Произошла ошибка');
+      }
 
+      alert('Заявка успешно отправлена!');
+    } catch (error) {
+      console.error('Ошибка при отправке заявки:', error);
+      setErrorMessage('Произошла ошибка при отправке заявки');
+    }
+  };
 
   return (
     <div className="p-4 space-y-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold text-center">Pick Your Hero</h1>
-      <p className="text-center text-sm text-gray-500">Сделай кастомную фигурку героя Dota 2</p>
 
       <div>
         <label className="font-semibold">1. Выбери героя:</label>
-        <input
-          type="text"
-          placeholder="Поиск героя..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full p-2 border mt-2"
-        />
-        <div className="mt-2 max-h-60 overflow-auto">
-          {filteredHeroes.length > 0 ? (
-            filteredHeroes.map((h) => (
-              <div
-                key={h}
-                onClick={() => setHero(h)}
-                className={`p-2 cursor-pointer ${hero === h ? 'bg-blue-500 text-white' : 'bg-white'}`}
-              >
-                {h}
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-500">Ничего не найдено...</p>
-          )}
-        </div>
+        <select className="w-full p-2 border mt-2" value={hero} onChange={(e) => setHero(e.target.value)}>
+          <option value="">Выберите героя</option>
+          {heroes.map((h) => (
+            <option key={h} value={h}>
+              {h}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
@@ -123,13 +94,11 @@ export default function App() {
         />
       </div>
 
-      <button
-        className="w-full p-2 bg-blue-500 text-white mt-4"
-        onClick={sendOrder}
-        disabled={!hero || !contact}
-      >
+      <button className="w-full p-2 bg-blue-500 text-white mt-4" onClick={sendOrder} disabled={!hero || !contact}>
         📦 Отправить заказ
       </button>
+
+      {errorMessage && <div className="text-red-500 mt-4">{errorMessage}</div>}
     </div>
   );
 }

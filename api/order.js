@@ -10,8 +10,7 @@ export default async function handler(req, res) {
     const { hero, skin, pose, comment, contact } = req.body;
 
     // Формируем сообщение для Telegram
-    const message = `
-      🦸‍♂️ **Новая заявка!**
+    const message = `🦸‍♂️ **Новая заявка!**
 
       **Герой:** ${hero}
       **Скин/внешний вид:** ${skin}
