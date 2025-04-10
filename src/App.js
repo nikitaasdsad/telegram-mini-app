@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 
 function App() {
-  // Состояния для формы
   const [hero, setHero] = useState('');
   const [skin, setSkin] = useState('');
   const [pose, setPose] = useState('');
@@ -10,7 +9,6 @@ function App() {
   const [contact, setContact] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
 
-  // Функция для отправки данных
   const handleSubmit = async (event) => {
     event.preventDefault();
 

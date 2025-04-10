@@ -1,17 +1,17 @@
 // api/order.js
 
-// Подключаем необходимые модули
+// Для работы с файловой системой
 const fs = require('fs');
 const path = require('path');
 
-// Путь для сохранения заявок (будет в логах)
+// Путь для сохранения заявок (создаем или обновляем файл с заявками)
 const logFilePath = path.join(process.cwd(), 'orders-log.json');
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { hero, skin, pose, comment, contact } = req.body;
 
-    // Логирование данных
+    // Создаем объект заявки
     const order = {
       hero,
       skin,
