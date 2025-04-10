@@ -1,4 +1,5 @@
 // src/App.js
+
 import React, { useState } from 'react';
 
 function App() {
@@ -12,15 +13,8 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const order = {
-      hero,
-      skin,
-      pose,
-      comment,
-      contact,
-    };
+    const order = { hero, skin, pose, comment, contact };
 
-    // Отправляем данные на сервер
     try {
       const response = await fetch('/api/order', {
         method: 'POST',
