@@ -32,7 +32,7 @@ export default function App() {
   const order = { hero, skin, pose, comment, contact };
 
   // Отправляем запрос на сервер для обработки
-  const response = await fetch('https://your-server-url.com/api/order', {
+  const response = await fetch('https://telegram-mini-app-bjen.vercel.app/api/order', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
