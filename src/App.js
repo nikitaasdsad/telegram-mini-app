@@ -2,7 +2,6 @@ import React from 'react';
 import { useEffect, useState } from 'react'; // Один раз импортируем useState и useEffect
 
 const heroes = ['Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut'];
-
 export default function App() {
   const [hero, setHero] = useState('');
   const [skin, setSkin] = useState('');
