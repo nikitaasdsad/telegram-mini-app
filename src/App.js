@@ -1,6 +1,5 @@
-// src/App.js
-
 import React, { useState } from 'react';
+import './App.css'; // Импортируем файл с CSS для стилизации
 
 function App() {
   const [hero, setHero] = useState('');
@@ -9,9 +8,19 @@ function App() {
   const [comment, setComment] = useState('');
   const [contact, setContact] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);  // Новый state для предотвращения повторных заявок
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Если заявка уже отправлена, не выполняем повторный запрос
+    if (isSubmitted) {
+      return;
+    }
+
+    setLoading(true);
+    setIsSubmitted(true); // Блокируем отправку заявок
 
     const order = { hero, skin, pose, comment, contact };
 
@@ -33,14 +42,16 @@ function App() {
     } catch (error) {
       setResponseMessage('Ошибка при отправке заявки');
       console.error('Ошибка:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Отправить заявку</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <div className="app-container">
+      <h1 className="title">Отправить заявку</h1>
+      <form onSubmit={handleSubmit} className="form">
+        <div className="form-group">
           <label>Герой</label>
           <input
             type="text"
@@ -49,7 +60,7 @@ function App() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Скин</label>
           <input
             type="text"
@@ -58,7 +69,7 @@ function App() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Поза</label>
           <input
             type="text"
@@ -67,7 +78,7 @@ function App() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Комментарий</label>
           <textarea
             value={comment}
@@ -75,7 +86,7 @@ function App() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Контакт</label>
           <input
             type="text"
@@ -84,9 +95,11 @@ function App() {
             required
           />
         </div>
-        <button type="submit">Отправить</button>
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? 'Отправка...' : 'Отправить'}
+        </button>
       </form>
-      {responseMessage && <p>{responseMessage}</p>}
+      {responseMessage && <p className="response-message">{responseMessage}</p>}
     </div>
   );
 }
