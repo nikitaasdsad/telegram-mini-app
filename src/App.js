@@ -1,158 +1,157 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
 
 const heroes = [
-  'Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut', 'Anti-Mage', 'Lion', 'Tinker'
-  // добавь сюда весь список героев, если ещё не добавил
+  'Abaddon', 'Alchemist', 'Ancient Apparition', 'Anti-Mage', 'Arc Warden', 'Axe',
+  'Bane', 'Batrider', 'Beastmaster', 'Bloodseeker', 'Bounty Hunter', 'Brewmaster', 'Bristleback', 'Broodmother',
+  'Centaur Warrunner', 'Chaos Knight', 'Chen', 'Clinkz', 'Clockwerk', 'Crystal Maiden',
+  'Dark Seer', 'Dark Willow', 'Dawnbreaker', 'Dazzle', 'Death Prophet', 'Disruptor', 'Doom', 'Dragon Knight', 'Drow Ranger',
+  'Earth Spirit', 'Earthshaker', 'Elder Titan', 'Ember Spirit', 'Enchantress', 'Enigma',
+  'Faceless Void', 'Grimstroke', 'Gyrocopter', 'Hoodwink', 'Huskar',
+  'Invoker', 'Io', 'Jakiro', 'Juggernaut', 'Keeper of the Light', 'Kunkka',
+  'Legion Commander', 'Leshrac', 'Lich', 'Lifestealer', 'Lina', 'Lion', 'Lone Druid', 'Luna', 'Lycan',
+  'Magnus', 'Marci', 'Mars', 'Medusa', 'Meepo', 'Mirana', 'Monkey King', 'Morphling',
+  'Muerta', 'Naga Siren', 'Nature\'s Prophet', 'Necrophos', 'Night Stalker', 'Nyx Assassin',
+  'Ogre Magi', 'Omniknight', 'Oracle', 'Outworld Destroyer',
+  'Pangolier', 'Phantom Assassin', 'Phantom Lancer', 'Phoenix', 'Primal Beast', 'Puck', 'Pudge', 'Pugna', 'Queen of Pain',
+  'Razor', 'Riki', 'Rubick',
+  'Sand King', 'Shadow Demon', 'Shadow Fiend', 'Shadow Shaman', 'Silencer', 'Skywrath Mage', 'Slardar', 'Slark', 'Snapfire', 'Sniper', 'Spectre', 'Spirit Breaker', 'Storm Spirit', 'Sven',
+  'Techies', 'Templar Assassin', 'Terrorblade', 'Tidehunter', 'Timbersaw', 'Tinker', 'Tiny', 'Treant Protector', 'Troll Warlord', 'Tusk',
+  'Underlord', 'Undying', 'Ursa',
+  'Vengeful Spirit', 'Venomancer', 'Viper', 'Visage', 'Void Spirit',
+  'Warlock', 'Weaver', 'Windranger', 'Winter Wyvern', 'Witch Doctor', 'Wraith King',
+  'Zeus'
 ];
 
 function App() {
-  const [order, setOrder] = useState({
-    hero: '',
-    skin: '',
-    pose: '',
-    comment: '',
-    contact: '',
-  });
-
+  const [heroSearch, setHeroSearch] = useState('');
   const [filteredHeroes, setFilteredHeroes] = useState(heroes);
-  const [searchHero, setSearchHero] = useState('');
-  const [isSent, setIsSent] = useState(false);
+  const [selectedHero, setSelectedHero] = useState('');
+  const [skin, setSkin] = useState('');
+  const [pose, setPose] = useState('');
+  const [comment, setComment] = useState('');
+  const [contact, setContact] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e) => {
-    setOrder({ ...order, [e.target.name]: e.target.value });
-  };
-useEffect(() => {
-  if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.ready();
-  }
-}, []);
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchHero(value);
-    setFilteredHeroes(heroes.filter(h => h.toLowerCase().includes(value)));
-  };
+  useEffect(() => {
+    setFilteredHeroes(
+      heroes.filter(hero =>
+        hero.toLowerCase().includes(heroSearch.toLowerCase())
+      )
+    );
+  }, [heroSearch]);
 
-  const handleHeroSelect = (hero) => {
-    setOrder({ ...order, hero });
-    setFilteredHeroes(heroes);
-    setSearchHero(hero);
-  };
+  const handleSubmit = async () => {
+    if (!selectedHero || !skin || !pose || !contact) {
+      alert('Пожалуйста, заполните все поля!');
+      return;
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const order = {
+      hero: selectedHero,
+      skin,
+      pose,
+      comment,
+      contact
+    };
+
     try {
-      const res = await fetch('/api/order', {
+      const response = await fetch('/api/order', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(order),
+        body: JSON.stringify(order)
       });
 
-      const data = await res.json();
-      if (data.success) {
-        setIsSent(true);
+      if (response.ok) {
+        setSubmitted(true);
       } else {
-        alert('Ошибка при отправке заявки');
+        alert('Произошла ошибка при отправке заявки');
       }
     } catch (error) {
       console.error('Ошибка:', error);
-      alert('Ошибка при отправке заявки');
+      alert('Ошибка соединения');
     }
   };
 
-  const handleClose = () => {
-    if (window.Telegram.WebApp) {
-      window.Telegram.WebApp.close();
-    } else {
-      alert('Мини-апп можно закрыть вручную');
-    }
-  };
+  if (submitted) {
+    return (
+      <div style={{ padding: 20, textAlign: 'center' }}>
+        <h2>🎉 Заявка успешно отправлена!</h2>
+      </div>
+    );
+  }
 
   return (
-    <div className="app">
-      {!isSent ? (
-        <form onSubmit={handleSubmit}>
-          <h2>Оформить заявку</h2>
+    <div style={{ maxWidth: 500, margin: 'auto', padding: 20, fontFamily: 'Arial' }}>
+      <h2>Создание заказа</h2>
 
-          <label>Выбор героя:</label>
-          <input
-            type="text"
-            value={searchHero}
-            onChange={handleSearch}
-            placeholder="Введите имя героя"
-            autoComplete="off"
-          />
-          <ul className="hero-list">
-            {filteredHeroes.map((h) => (
-              <li key={h} onClick={() => handleHeroSelect(h)}>{h}</li>
-            ))}
-          </ul>
+      <label>Поиск героя</label>
+      <input
+        type="text"
+        value={heroSearch}
+        onChange={e => setHeroSearch(e.target.value)}
+        placeholder="Введите имя героя"
+        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+      />
 
-          <label>Скин / Внешний вид:</label>
-          <input
-            type="text"
-            name="skin"
-            value={order.skin}
-            onChange={handleChange}
-            placeholder="Напишите название скина или описание"
-            required
-          />
+      <label>Выберите героя</label>
+      <select
+        value={selectedHero}
+        onChange={e => setSelectedHero(e.target.value)}
+        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+      >
+        <option value="">-- Выберите героя --</option>
+        {filteredHeroes.map(hero => (
+          <option key={hero} value={hero}>{hero}</option>
+        ))}
+      </select>
 
-          <label>Поза героя:</label>
-          <input
-            type="text"
-            name="pose"
-            value={order.pose}
-            onChange={handleChange}
-            placeholder="Например: атакующая поза"
-            required
-          />
+      <input
+        type="text"
+        value={skin}
+        onChange={e => setSkin(e.target.value)}
+        placeholder="Название или описание скина"
+        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+      />
 
-          <label>Комментарий:</label>
-          <input
-            type="text"
-            name="comment"
-            value={order.comment}
-            onChange={handleChange}
-            placeholder="Дополнительные пожелания"
-          />
+      <input
+        type="text"
+        value={pose}
+        onChange={e => setPose(e.target.value)}
+        placeholder="Поза героя (например, атакующая, расслабленная)"
+        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+      />
 
-          <label>Контакт для связи:</label>
-          <input
-            type="text"
-            name="contact"
-            value={order.contact}
-            onChange={handleChange}
-            placeholder="@your_tg"
-            required
-          />
+      <textarea
+        value={comment}
+        onChange={e => setComment(e.target.value)}
+        placeholder="Комментарий к заказу (опционально)"
+        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+      />
 
-          <button type="submit">Отправить заявку</button>
-        </form>
-      ) : (
-        <div className="success-popup">
-          <h3>🎉 Заявка успешно отправлена!</h3>
-          <button
-  onClick={() => {
-    const isTelegramApp = () =>
-      typeof window !== 'undefined' &&
-      window.Telegram !== undefined &&
-      window.Telegram.WebApp !== undefined &&
-      window.Telegram.WebApp.platform !== undefined;
+      <input
+        type="text"
+        value={contact}
+        onChange={e => setContact(e.target.value)}
+        placeholder="@your_tg"
+        style={{ width: '100%', padding: 8, marginBottom: 20 }}
+      />
 
-    if (isTelegramApp()) {
-      window.Telegram.WebApp.close();
-    } else {
-      alert('Вы не в Telegram. Закрыть можно только внутри Telegram.');
-    }
-  }}
->
-  Закрыть мини-приложение
-</button>
-        </div>
-      )}
+      <button
+        onClick={handleSubmit}
+        style={{
+          width: '100%',
+          padding: 10,
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: 16
+        }}
+      >
+        Отправить заявку
+      </button>
     </div>
   );
 }
