@@ -37,6 +37,33 @@
   }
 }
 /* src/App.css */
+.success-popup {
+    text-align: center;
+    padding: 2rem;
+    background-color: #e8ffe8;
+    border-radius: 12px;
+    margin: 2rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.hero-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+    .hero-list li {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        .hero-list li:hover {
+            background-color: #f0f0f0;
+        }
 
 .app-container {
     max-width: 600px;

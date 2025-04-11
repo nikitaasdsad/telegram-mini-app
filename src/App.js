@@ -1,136 +1,136 @@
 import React, { useState } from 'react';
 import './App.css';
 
+const heroes = [
+  'Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut', 'Anti-Mage', 'Lion', 'Tinker'
+  // добавь сюда весь список героев, если ещё не добавил
+];
+
 function App() {
-  const [hero, setHero] = useState('');
-  const [skin, setSkin] = useState('');
-  const [pose, setPose] = useState('');
-  const [comment, setComment] = useState('');
-  const [contact, setContact] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);  // Блокировка повторных заявок
-  const [showForm, setShowForm] = useState(true); // Управление видимостью формы
+  const [order, setOrder] = useState({
+    hero: '',
+    skin: '',
+    pose: '',
+    comment: '',
+    contact: '',
+  });
 
-  const heroes = ['Invoker', 'Pudge', 'Phantom Assassin', 'Juggernaut', 'Anti-Mage', 'Lion', 'Tinker'];
+  const [filteredHeroes, setFilteredHeroes] = useState(heroes);
+  const [searchHero, setSearchHero] = useState('');
+  const [isSent, setIsSent] = useState(false);
 
-  const handleSubmit = async (event) => {
-  event.preventDefault();
+  const handleChange = (e) => {
+    setOrder({ ...order, [e.target.name]: e.target.value });
+  };
 
-  // Если заявка уже отправлена, не выполняем повторный запрос
-  if (isSubmitted) {
-    return;
-  }
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchHero(value);
+    setFilteredHeroes(heroes.filter(h => h.toLowerCase().includes(value)));
+  };
 
-  setLoading(true);
-  setIsSubmitted(true); // Блокируем повторную отправку заявки
+  const handleHeroSelect = (hero) => {
+    setOrder({ ...order, hero });
+    setFilteredHeroes(heroes);
+    setSearchHero(hero);
+  };
 
-  const order = { hero, skin, pose, comment, contact };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(order),
+      });
 
-  try {
-    const response = await fetch('/api/order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(order),
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      setResponseMessage('Заявка успешно отправлена');
-    } else {
-      setResponseMessage('Ошибка при отправке заявки');
+      const data = await res.json();
+      if (data.success) {
+        setIsSent(true);
+      } else {
+        alert('Ошибка при отправке заявки');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при отправке заявки');
     }
-  } catch (error) {
-    setResponseMessage('Ошибка при отправке заявки');
-    console.error('Ошибка:', error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const handleClose = () => {
-    setShowForm(false); // Скрыть форму
+    if (window.Telegram.WebApp) {
+      window.Telegram.WebApp.close();
+    } else {
+      alert('Мини-апп можно закрыть вручную');
+    }
   };
 
   return (
-    <div className="app-container">
-      {showForm ? (
-        <>
-          <h1 className="title">Отправить заявку</h1>
-          <form onSubmit={handleSubmit} className="form">
-            <div className="form-group">
-              <label>Герой</label>
-              <input
-                type="text"
-                value={hero}
-                onChange={(e) => setHero(e.target.value)}
-                placeholder="Введите имя героя"
-                list="hero-list"
-                required
-              />
-              <datalist id="hero-list">
-                {heroes.map((heroName, index) => (
-                  <option key={index} value={heroName} />
-                ))}
-              </datalist>
-            </div>
+    <div className="app">
+      {!isSent ? (
+        <form onSubmit={handleSubmit}>
+          <h2>Оформить заявку</h2>
 
-            <div className="form-group">
-              <label>Скин</label>
-              <input
-                type="text"
-                value={skin}
-                onChange={(e) => setSkin(e.target.value)}
-                placeholder="Напишите название скина или описание"
-                required
-              />
-            </div>
+          <label>Выбор героя:</label>
+          <input
+            type="text"
+            value={searchHero}
+            onChange={handleSearch}
+            placeholder="Введите имя героя"
+            autoComplete="off"
+          />
+          <ul className="hero-list">
+            {filteredHeroes.map((h) => (
+              <li key={h} onClick={() => handleHeroSelect(h)}>{h}</li>
+            ))}
+          </ul>
 
-            <div className="form-group">
-              <label>Поза</label>
-              <input
-                type="text"
-                value={pose}
-                onChange={(e) => setPose(e.target.value)}
-                placeholder="Укажите позу героя"
-                required
-              />
-            </div>
+          <label>Скин / Внешний вид:</label>
+          <input
+            type="text"
+            name="skin"
+            value={order.skin}
+            onChange={handleChange}
+            placeholder="Напишите название скина или описание"
+            required
+          />
 
-            <div className="form-group">
-              <label>Комментарий</label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Введите комментарий"
-                required
-              />
-            </div>
+          <label>Поза героя:</label>
+          <input
+            type="text"
+            name="pose"
+            value={order.pose}
+            onChange={handleChange}
+            placeholder="Например: атакующая поза"
+            required
+          />
 
-            <div className="form-group">
-              <label>Контакт</label>
-              <input
-                type="text"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                placeholder="Введите ваш контакт (например, @your_tg)"
-                required
-              />
-            </div>
+          <label>Комментарий:</label>
+          <input
+            type="text"
+            name="comment"
+            value={order.comment}
+            onChange={handleChange}
+            placeholder="Дополнительные пожелания"
+          />
 
-            <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? 'Отправка...' : 'Отправить'}
-            </button>
-          </form>
-          {responseMessage && <p className="response-message">{responseMessage}</p>}
-        </>
+          <label>Контакт для связи:</label>
+          <input
+            type="text"
+            name="contact"
+            value={order.contact}
+            onChange={handleChange}
+            placeholder="@your_tg"
+            required
+          />
+
+          <button type="submit">Отправить заявку</button>
+        </form>
       ) : (
-        <div className="response-container">
-          <h2>{responseMessage}</h2>
-          <button className="close-button" onClick={handleClose}>Закрыть мини-апп</button>
+        <div className="success-popup">
+          <h3>🎉 Заявка успешно отправлена!</h3>
+          <button onClick={handleClose}>Закрыть мини-приложение</button>
         </div>
       )}
     </div>
