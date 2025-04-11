@@ -18,7 +18,7 @@ const heroes = [
   'Sand King', 'Shadow Demon', 'Shadow Fiend', 'Shadow Shaman', 'Silencer', 'Skywrath Mage', 'Slardar', 'Slark', 'Snapfire', 'Sniper', 'Spectre', 'Spirit Breaker', 'Storm Spirit', 'Sven',
   'Techies', 'Templar Assassin', 'Terrorblade', 'Tidehunter', 'Timbersaw', 'Tinker', 'Tiny', 'Treant Protector', 'Troll Warlord', 'Tusk',
   'Underlord', 'Undying', 'Ursa',
-  'Vengeful Spirit', 'Venomancer', 'Viper', 'Visage', 'Void Spirit',
+  'Vengeful Spirit',  'Viper', 'Visage', 'Void Spirit',
   'Warlock', 'Weaver', 'Windranger', 'Winter Wyvern', 'Witch Doctor', 'Wraith King',
   'Zeus'
 ];
