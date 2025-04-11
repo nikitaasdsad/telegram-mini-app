@@ -22,7 +22,11 @@ function App() {
   const handleChange = (e) => {
     setOrder({ ...order, [e.target.name]: e.target.value });
   };
-
+useEffect(() => {
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready();
+  }
+}, []);
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchHero(value);
@@ -132,10 +136,16 @@ function App() {
           <h3>🎉 Заявка успешно отправлена!</h3>
           <button
   onClick={() => {
-    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+    const isTelegramApp = () =>
+      typeof window !== 'undefined' &&
+      window.Telegram !== undefined &&
+      window.Telegram.WebApp !== undefined &&
+      window.Telegram.WebApp.platform !== undefined;
+
+    if (isTelegramApp()) {
       window.Telegram.WebApp.close();
     } else {
-      alert('Вы не в Telegram. Закрыть можно только из Telegram.');
+      alert('Вы не в Telegram. Закрыть можно только внутри Telegram.');
     }
   }}
 >
