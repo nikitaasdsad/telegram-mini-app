@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = import('axios');
 
 // Токен для Telegram-бота
 const TELEGRAM_BOT_TOKEN = '7209885388:AAEOBty7DIXSgY_F0_05DhUntMy3jpCoPW0';
