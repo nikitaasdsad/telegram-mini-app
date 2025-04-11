@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';  // Подключаем файл стилей
 
 const heroes = [
   'Abaddon', 'Alchemist', 'Ancient Apparition', 'Anti-Mage', 'Arc Warden', 'Axe',
@@ -76,14 +77,14 @@ function App() {
 
   if (submitted) {
     return (
-      <div style={{ padding: 20, textAlign: 'center' }}>
+      <div className="container">
         <h2>🎉 Заявка успешно отправлена!</h2>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: 500, margin: 'auto', padding: 20, fontFamily: 'Arial' }}>
+    <div className="container">
       <h2>Создание заказа</h2>
 
       <label>Поиск героя</label>
@@ -92,14 +93,14 @@ function App() {
         value={heroSearch}
         onChange={e => setHeroSearch(e.target.value)}
         placeholder="Введите имя героя"
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        className="input"
       />
 
       <label>Выберите героя</label>
       <select
         value={selectedHero}
         onChange={e => setSelectedHero(e.target.value)}
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        className="input"
       >
         <option value="">-- Выберите героя --</option>
         {filteredHeroes.map(hero => (
@@ -112,7 +113,7 @@ function App() {
         value={skin}
         onChange={e => setSkin(e.target.value)}
         placeholder="Название или описание скина"
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        className="input"
       />
 
       <input
@@ -120,14 +121,14 @@ function App() {
         value={pose}
         onChange={e => setPose(e.target.value)}
         placeholder="Поза героя (например, атакующая, расслабленная)"
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        className="input"
       />
 
       <textarea
         value={comment}
         onChange={e => setComment(e.target.value)}
         placeholder="Комментарий к заказу (опционально)"
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        className="input"
       />
 
       <input
@@ -135,20 +136,12 @@ function App() {
         value={contact}
         onChange={e => setContact(e.target.value)}
         placeholder="@your_tg"
-        style={{ width: '100%', padding: 8, marginBottom: 20 }}
+        className="input"
       />
 
       <button
         onClick={handleSubmit}
-        style={{
-          width: '100%',
-          padding: 10,
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: 16
-        }}
+        className="submit-btn"
       >
         Отправить заявку
       </button>
