@@ -130,7 +130,17 @@ function App() {
       ) : (
         <div className="success-popup">
           <h3>🎉 Заявка успешно отправлена!</h3>
-          <button onClick={handleClose}>Закрыть мини-приложение</button>
+          <button
+  onClick={() => {
+    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.close();
+    } else {
+      alert('Вы не в Telegram. Закрыть можно только из Telegram.');
+    }
+  }}
+>
+  Закрыть мини-приложение
+</button>
         </div>
       )}
     </div>
