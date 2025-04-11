@@ -1,4 +1,5 @@
-const axios = import('axios');
+import pkg from 'axios';
+const axios = pkg.default;
 
 // Токен для Telegram-бота
 const TELEGRAM_BOT_TOKEN = '7209885388:AAEOBty7DIXSgY_F0_05DhUntMy3jpCoPW0';
