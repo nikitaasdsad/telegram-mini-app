@@ -2,6 +2,7 @@
   "name": "telegram-mini-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "resolutions": {
     "webpack": "^5.65.0"
   },
