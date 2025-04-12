@@ -11,7 +11,7 @@ const heroes = [
   'Witch Doctor', 'Lich', 'Riki', 'Enigma', 'Tinker', 'Sniper', 'Necrophos', 'Warlock',
   'Queen of Pain', 'Venomancer', 'Faceless Void', 'Wraith King', 'Death Prophet',
   'Phantom Assassin', 'Pugna', 'Templar Assassin', 'Viper', 'Luna', 'Dragon Knight',
-  'Dazzle', 'Clockwerk', 'Leshrac', 'Nature's Prophet', 'Lifestealer', 'Dark Seer',
+  'Dazzle', 'Clockwerk', 'Leshrac', 'Nature s Prophet', 'Lifestealer', 'Dark Seer',
   'Clinkz', 'Omniknight', 'Huskar', 'Night Stalker', 'Broodmother', 'Bounty Hunter',
   'Weaver', 'Jakiro', 'Batrider', 'Chen', 'Spectre', 'Doom', 'Ancient Apparition',
   'Ursa', 'Spirit Breaker', 'Gyrocopter', 'Alchemist', 'Invoker', 'Silencer',
