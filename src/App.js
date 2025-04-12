@@ -1,150 +1,112 @@
+// src/App.js
 import React, { useState, useEffect } from 'react';
-import './App.css';  // Подключаем файл стилей
+import './App.css';
+import axios from 'axios';
 
 const heroes = [
-  'Abaddon', 'Alchemist', 'Ancient Apparition', 'Anti-Mage', 'Arc Warden', 'Axe',
-  'Bane', 'Batrider', 'Beastmaster', 'Bloodseeker', 'Bounty Hunter', 'Brewmaster', 'Bristleback', 'Broodmother',
-  'Centaur Warrunner', 'Chaos Knight', 'Chen', 'Clinkz', 'Clockwerk', 'Crystal Maiden',
-  'Dark Seer', 'Dark Willow', 'Dawnbreaker', 'Dazzle', 'Death Prophet', 'Disruptor', 'Doom', 'Dragon Knight', 'Drow Ranger',
-  'Earth Spirit', 'Earthshaker', 'Elder Titan', 'Ember Spirit', 'Enchantress', 'Enigma',
-  'Faceless Void', 'Grimstroke', 'Gyrocopter', 'Hoodwink', 'Huskar',
-  'Invoker', 'Io', 'Jakiro', 'Juggernaut', 'Keeper of the Light', 'Kunkka',
-  'Legion Commander', 'Leshrac', 'Lich', 'Lifestealer', 'Lina', 'Lion', 'Lone Druid', 'Luna', 'Lycan',
-  'Magnus', 'Marci', 'Mars', 'Medusa', 'Meepo', 'Monkey King', 'Morphling',
-  'Muerta', 'Naga Siren', 'Nature\'s Prophet', 'Necrophos', 'Night Stalker', 'Nyx Assassin',
-  'Ogre Magi', 'Omniknight', 'Oracle', 'Outworld Destroyer',
-  'Pangolier', 'Phantom Assassin', 'Phantom Lancer', 'Phoenix', 'Primal Beast', 'Puck', 'Pudge', 'Pugna', 'Queen of Pain',
-  'Razor', 'Riki', 'Rubick',
-  'Sand King', 'Shadow Demon', 'Shadow Fiend', 'Shadow Shaman', 'Silencer', 'Skywrath Mage', 'Slardar', 'Slark', 'Snapfire', 'Sniper', 'Spectre', 'Spirit Breaker', 'Storm Spirit', 'Sven',
-  'Techies', 'Templar Assassin', 'Terrorblade', 'Tidehunter', 'Timbersaw', 'Tinker', 'Tiny', 'Treant Protector', 'Troll Warlord', 'Tusk',
-  'Underlord', 'Undying', 'Ursa',
-  'Vengeful Spirit',  'Viper', 'Visage', 'Void Spirit',
-  'Warlock', 'Weaver', 'Windranger', 'Winter Wyvern', 'Witch Doctor', 'Wraith King',
-  'Zeus'
+  'Anti-Mage', 'Axe', 'Bane', 'Bloodseeker', 'Crystal Maiden', 'Drow Ranger',
+  'Earthshaker', 'Juggernaut', 'Mirana', 'Morphling', 'Shadow Fiend', 'Phantom Lancer',
+  'Puck', 'Pudge', 'Razor', 'Sand King', 'Storm Spirit', 'Sven', 'Tiny', 'Vengeful Spirit',
+  'Windranger', 'Zeus', 'Kunkka', 'Lina', 'Lion', 'Shadow Shaman', 'Slardar', 'Tidehunter',
+  'Witch Doctor', 'Lich', 'Riki', 'Enigma', 'Tinker', 'Sniper', 'Necrophos', 'Warlock',
+  'Queen of Pain', 'Venomancer', 'Faceless Void', 'Wraith King', 'Death Prophet',
+  'Phantom Assassin', 'Pugna', 'Templar Assassin', 'Viper', 'Luna', 'Dragon Knight',
+  'Dazzle', 'Clockwerk', 'Leshrac', 'Nature's Prophet', 'Lifestealer', 'Dark Seer',
+  'Clinkz', 'Omniknight', 'Huskar', 'Night Stalker', 'Broodmother', 'Bounty Hunter',
+  'Weaver', 'Jakiro', 'Batrider', 'Chen', 'Spectre', 'Doom', 'Ancient Apparition',
+  'Ursa', 'Spirit Breaker', 'Gyrocopter', 'Alchemist', 'Invoker', 'Silencer',
+  'Outworld Destroyer', 'Lycan', 'Brewmaster', 'Shadow Demon', 'Lone Druid',
+  'Chaos Knight', 'Meepo', 'Treant Protector', 'Ogre Magi', 'Undying', 'Rubick',
+  'Disruptor', 'Nyx Assassin', 'Naga Siren', 'Keeper of the Light', 'Io',
+  'Visage', 'Slark', 'Medusa', 'Troll Warlord', 'Centaur Warrunner',
+  'Magnus', 'Timbersaw', 'Bristleback', 'Tusk', 'Skywrath Mage', 'Abaddon',
+  'Elder Titan', 'Legion Commander', 'Techies', 'Ember Spirit', 'Earth Spirit',
+  'Underlord', 'Terrorblade', 'Phoenix', 'Oracle', 'Winter Wyvern', 'Arc Warden',
+  'Monkey King', 'Dark Willow', 'Pangolier', 'Grimstroke', 'Hoodwink', 'Void Spirit',
+  'Snapfire', 'Mars', 'Dawnbreaker', 'Marci', 'Primal Beast', 'Muerta'
 ];
 
 function App() {
-  const [heroSearch, setHeroSearch] = useState('');
-  const [filteredHeroes, setFilteredHeroes] = useState(heroes);
-  const [selectedHero, setSelectedHero] = useState('');
+  const [hero, setHero] = useState('');
   const [skin, setSkin] = useState('');
   const [pose, setPose] = useState('');
   const [comment, setComment] = useState('');
   const [contact, setContact] = useState('');
+  const [filteredHeroes, setFilteredHeroes] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
     setFilteredHeroes(
-      heroes.filter(hero =>
-        hero.toLowerCase().includes(heroSearch.toLowerCase())
-      )
+      heroes.filter(h => h.toLowerCase().includes(hero.toLowerCase()))
     );
-  }, [heroSearch]);
+  }, [hero]);
 
   const handleSubmit = async () => {
-    if (!selectedHero || !skin || !pose || !contact) {
-      alert('Пожалуйста, заполните все поля!');
-      return;
-    }
-
-    const order = {
-      hero: selectedHero,
-      skin,
-      pose,
-      comment,
-      contact
-    };
+    if (blocked) return;
+    setBlocked(true);
+    setSubmitted(true);
 
     try {
-      const response = await fetch('/api/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(order)
+      await axios.post('/api/order', {
+        hero, skin, pose, comment, contact
       });
-
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        alert('Произошла ошибка при отправке заявки');
-      }
-    } catch (error) {
-      console.error('Ошибка:', error);
-      alert('Ошибка соединения');
+    } catch (e) {
+      console.error('Ошибка при отправке:', e);
     }
   };
 
-  if (submitted) {
-    return (
-      <div className="container">
-        <h2>🎉 Заявка успешно отправлена!</h2>
-      </div>
-    );
-  }
-
   return (
-    <div className="container">
-      <h2>Создание заказа</h2>
+    <div className="app">
+      <h1 className="title">🎮 Pick Your Hero</h1>
+      {submitted ? (
+        <div className="success">Заявка успешно отправлена!</div>
+      ) : (
+        <div className="form">
+          <div className="field">
+            <input
+              type="text"
+              placeholder="Введите имя героя..."
+              value={hero}
+              onChange={(e) => setHero(e.target.value)}
+              className="input"
+            />
+            {hero && filteredHeroes.length > 0 && (
+              <ul className="dropdown">
+                {filteredHeroes.map((h, i) => (
+                  <li key={i} onClick={() => setHero(h)}>{h}</li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-      <label>Поиск героя</label>
-      <input
-        type="text"
-        value={heroSearch}
-        onChange={e => setHeroSearch(e.target.value)}
-        placeholder="Введите имя героя"
-        className="input"
-      />
-
-      <label>Выберите героя</label>
-      <select
-        value={selectedHero}
-        onChange={e => setSelectedHero(e.target.value)}
-        className="input"
-      >
-        <option value="">-- Выберите героя --</option>
-        {filteredHeroes.map(hero => (
-          <option key={hero} value={hero}>{hero}</option>
-        ))}
-      </select>
-
-      <input
-        type="text"
-        value={skin}
-        onChange={e => setSkin(e.target.value)}
-        placeholder="Название или описание скина"
-        className="input"
-      />
-
-      <input
-        type="text"
-        value={pose}
-        onChange={e => setPose(e.target.value)}
-        placeholder="Поза героя (например, атакующая, расслабленная)"
-        className="input"
-      />
-
-      <textarea
-        value={comment}
-        onChange={e => setComment(e.target.value)}
-        placeholder="Комментарий к заказу (опционально)"
-        className="input"
-      />
-
-      <input
-        type="text"
-        value={contact}
-        onChange={e => setContact(e.target.value)}
-        placeholder="@your_tg"
-        className="input"
-      />
-
-      <button
-        onClick={handleSubmit}
-        className="submit-btn"
-      >
-        Отправить заявку
-      </button>
+          <input
+            className="input"
+            placeholder="Название или описание скина"
+            value={skin}
+            onChange={e => setSkin(e.target.value)}
+          />
+          <input
+            className="input"
+            placeholder="Поза персонажа (например: атакует, стоит, прыгает)"
+            value={pose}
+            onChange={e => setPose(e.target.value)}
+          />
+          <input
+            className="input"
+            placeholder="Комментарий"
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+          />
+          <input
+            className="input"
+            placeholder="@your_tg"
+            value={contact}
+            onChange={e => setContact(e.target.value)}
+          />
+          <button className="button" onClick={handleSubmit}>Отправить</button>
+        </div>
+      )}
     </div>
   );
 }

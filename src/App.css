@@ -36,62 +36,108 @@
     transform: rotate(360deg);
   }
 }
-/* Добавляем фон с градиентом */
-body {
-    background: linear-gradient(135deg, #f2e7d2, #022838, #d14b1c);
-    font-family: Arial, sans-serif;
+/* src/App.css */
+body, html {
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(-45deg, #f2e7d2, #022838, #d14b1c, #f2e7d2);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-/* Контейнер с полями */
-.container {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 20px;
-    width: 100%;
-    max-width: 450px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    text-align: center;
-    color: #022838;
-}
-
-/* Стиль для всех инпутов и textarea */
-.input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-/* Стиль кнопки */
-.submit-btn {
-    width: 100%;
-    padding: 15px;
-    background-color: #d14b1c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-    .submit-btn:hover {
-        background-color: #b83e0f;
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
     }
 
-/* Плейсхолдер для всех полей */
-::placeholder {
-    color: #aaa;
-    font-style: italic;
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
+
+.app {
+    padding: 2rem;
+    color: #fff;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.input {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.button {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 12px;
+    background-color: #d14b1c;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .button:hover {
+        background-color: #a53912;
+    }
+
+.success {
+    text-align: center;
+    font-size: 1.2rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.field {
+    position: relative;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    color: black;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+    .dropdown li {
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+        .dropdown li:hover {
+            background-color: #eee;
+        }
